@@ -1,0 +1,20 @@
+{
+  "name": "energy-invoices-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/guilhermeytalo/energy-invoices-backend.git",
+  "author": "Guilherme Ytalo <gydaytalo@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "npm run build && node build/index.js",
+    "start:dev": "npx nodemon",
+    "build": "rimraf ./build && tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "nodemon": "^3.0.2",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
+}
