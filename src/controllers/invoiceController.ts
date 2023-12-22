@@ -12,7 +12,6 @@ interface ExtractedData {
     sceeICMS: string | null;
     energiaCompensada: string | null;
     contribIlumPublica: string | null;
-    // Add more properties as needed
   };
 }
 
@@ -20,28 +19,22 @@ const parsePDF = async (filePath: string): Promise<ExtractedData> => {
   try {
     const pdfFile = fs.readFileSync(filePath);
     const data = await pdfParser(pdfFile);
-    const text = data.text; // Extracted text from PDF
+    const text = data.text; 
 
-    // Define regular expressions to match specific patterns
     const regexPatterns: Record<string, RegExp> = {
-      cliente: /Nº DO CLIENTE\s*(\d+)/,
-      referente: /Referente a\s+(\w+\/\d+)/,
+      cliente: /Nº DA INSTALAÇÃO\s+(\d+)/,
+      referente: /Valor a pagar \(R\$\)\s+(\w+\/\d+)/,
       energiaEletrica: /Energia ElétricakWh(.*?)\n/,
       sceeICMS: /Energia SCEE s\/ ICMSkWh(.*?)\n/,
       energiaCompensada: /Energia compensada GD IkWh(.*?)\n/,
       contribIlumPublica: /Contrib Ilum Publica Municipal(.*?)\n/,
-      // Add more patterns for other properties as needed
     };
 
-    
-    // Function to extract value based on regex pattern
     const extractValue = (pattern: RegExp): string | null => {
       const match = text.match(pattern);
       return match ? match[1].trim() : null;
     };
 
-
-    // Extract values using defined patterns
     const extractedData: ExtractedData = {
       fileName: filePath,
       numPages: data.numpages,
@@ -52,7 +45,6 @@ const parsePDF = async (filePath: string): Promise<ExtractedData> => {
         sceeICMS: extractValue(regexPatterns.sceeICMS),
         energiaCompensada: extractValue(regexPatterns.energiaCompensada),
         contribIlumPublica: extractValue(regexPatterns.contribIlumPublica),
-        // Add more properties here based on the defined patterns
       },
     };
     console.log('regexPatterns:', extractedData);
@@ -67,7 +59,6 @@ const parsePDF = async (filePath: string): Promise<ExtractedData> => {
       sceeICMS: null,
       energiaCompensada: null,
       contribIlumPublica: null,
-      // Add more properties here based on the defined patterns
     } };
   }
 };
