@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invoices {
+  id          Int      @id @default(autoincrement())
+  clientNumber   String   @unique
+  invoiceMonthDate DateTime
+  eletricEnergy     DateTime
+  sceeEnergy      String
+  compensedEnergy      String
+  contrivutionIlumination      String
+}
+
+model Dashboard {
+  id          Int      @id @default(autoincrement())
+  consume String
+  compensedEnergy      String
+  totalValueWGd      String
+  sceeEnergyWIcms      String
+  economyGd      String
+}
