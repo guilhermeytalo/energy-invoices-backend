@@ -47,7 +47,6 @@ const parsePDF = async (filePath: string): Promise<ExtractedData> => {
         contribIlumPublica: extractValue(regexPatterns.contribIlumPublica),
       },
     };
-    console.log('regexPatterns:', extractedData);
 
     return extractedData;
   } catch (error) {
@@ -77,6 +76,6 @@ export const getInvoices = async (req: Request, res: Response): Promise<void> =>
     res.status(200).json(parsedData);
   } catch (error) {
     console.error('Error getting invoices:', error);
-    res.status(500).json({ error: 'Failed to retrieve invoices' });
+    res.status(400).json({ error: 'Failed to retrieve invoices' });
   }
 };

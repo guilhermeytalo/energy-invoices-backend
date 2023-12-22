@@ -18,6 +18,8 @@ model Invoices {
   sceeEnergy      String
   compensedEnergy      String
   contrivutionIlumination      String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model Dashboard {
@@ -27,4 +29,6 @@ model Dashboard {
   totalValueWGd      String
   sceeEnergyWIcms      String
   economyGd      String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
