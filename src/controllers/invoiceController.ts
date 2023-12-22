@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import fs from 'fs';
 import pdfParser from 'pdf-parse';
 
@@ -15,11 +14,11 @@ interface ExtractedData {
   };
 }
 
-const parsePDF = async (filePath: string): Promise<ExtractedData> => {
+export const parsePDF = async (filePath: string): Promise<ExtractedData> => {
   try {
     const pdfFile = fs.readFileSync(filePath);
     const data = await pdfParser(pdfFile);
-    const text = data.text; 
+    const text = data.text;
 
     const regexPatterns: Record<string, RegExp> = {
       cliente: /Nº DA INSTALAÇÃO\s+(\d+)/,
@@ -51,31 +50,17 @@ const parsePDF = async (filePath: string): Promise<ExtractedData> => {
     return extractedData;
   } catch (error) {
     console.error(`Error parsing ${filePath}:`, error);
-    return { fileName: filePath, numPages: 0, text: {
-      cliente: null,
-      referente: null,
-      energiaEletrica: null,
-      sceeICMS: null,
-      energiaCompensada: null,
-      contribIlumPublica: null,
-    } };
-  }
-};
-
-export const getInvoices = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const directoryPath = './src/assets/invoices';
-    const files = fs.readdirSync(directoryPath);
-
-    const parsedDataPromises = files.map(async (file) => {
-      const filePath = `${directoryPath}/${file}`;
-      return await parsePDF(filePath);
-    });
-
-    const parsedData = await Promise.all(parsedDataPromises);
-    res.status(200).json(parsedData);
-  } catch (error) {
-    console.error('Error getting invoices:', error);
-    res.status(400).json({ error: 'Failed to retrieve invoices' });
+    return {
+      fileName: filePath,
+      numPages: 0,
+      text: {
+        cliente: null,
+        referente: null,
+        energiaEletrica: null,
+        sceeICMS: null,
+        energiaCompensada: null,
+        contribIlumPublica: null,
+      },
+    };
   }
 };

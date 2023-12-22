@@ -8,7 +8,9 @@
   "scripts": {
     "start": "npm run build && node build/index.js",
     "start:dev": "npx nodemon",
-    "build": "rimraf ./build && tsc"
+    "migrate": "prisma migrate dev",
+    "build": "rimraf ./build && tsc",
+    "test": "vitest"
   },
   "dependencies": {
     "@prisma/client": "5.7.1",
@@ -26,6 +28,7 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "prisma": "^5.7.1"
+    "prisma": "^5.7.1",
+    "vitest": "^1.1.0"
   }
 }
