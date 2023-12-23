@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import { parsePDF } from '../controllers/invoiceController';
+
 export const getInvoices = async (
   req: Request,
   res: Response
@@ -19,5 +20,18 @@ export const getInvoices = async (
   } catch (error) {
     console.error('Error getting invoices:', error);
     res.status(400).json({ error: 'Failed to retrieve invoices' });
+  }
+};
+
+export const uploadInvoice = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const parsedData = await parsePDF(req?.file?.path ?? '');
+    res.status(200).json(parsedData);
+  } catch (error) {
+    console.error('Error parsing uploaded file:', error);
+    res.status(400).json({ error: 'Failed to parse uploaded file' });
   }
 };
