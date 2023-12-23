@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import { parsePDF } from '../controllers/invoiceController';
+import multer from 'multer';
+
+const upload = multer({ dest: 'uploads/' });
+
 export const getInvoices = async (
   req: Request,
   res: Response
@@ -21,3 +25,13 @@ export const getInvoices = async (
     res.status(400).json({ error: 'Failed to retrieve invoices' });
   }
 };
+
+export const uploadInvoice = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const parsedData = await parsePDF(req?.file?.path);
+    res.status(200).json(parsedData);
+  } catch (error) {
+    console.error('Error parsing uploaded file:', error);
+    res.status(400).json({ error: 'Failed to parse uploaded file' });
+  }
+}

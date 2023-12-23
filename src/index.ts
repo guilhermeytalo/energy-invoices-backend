@@ -13,6 +13,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/invoices', router);
+app.use('/dashboard', router);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
