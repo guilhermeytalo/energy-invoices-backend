@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
-import invoiceRoutes from './routes/invoiceRoutes';
+import router from './routes/routes';
 dotenv.config();
 
 const app = express();
@@ -12,7 +12,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('Hello World!');
 });
 
-app.use('/invoices', invoiceRoutes);
+app.use('/invoices', router);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
