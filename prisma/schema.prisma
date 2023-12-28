@@ -10,16 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Invoices {
+model InvoiceEntry {
   id          Int      @id @default(autoincrement())
-  clientNumber   String
-  invoiceMonthDate String
-  eletricEnergy     String
-  sceeEnergy      String
-  compensedEnergy      String
-  contrivutionIlumination      String
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
+  quant       String
+  unitPrice   String
+  value       String
+  unitTax     String
+}
+
+model Invoice {
+  id                  Int             @id @default(autoincrement())
+  clientNumber        String
+  invoiceMonthDate    String
+  eletricEnergy       InvoiceEntry   @relation(name: "EletricEnergy", fields: [eletricEnergyId], references: [id])
+  eletricEnergyId     Int @unique
+  sceeEnergy          InvoiceEntry      @relation(name: "SceeEnergy", fields: [sceeEnergyId], references: [id])
+  sceeEnergyId        Int @unique
+  compensedEnergy     InvoiceEntry @relation(name: "CompensedEnergy",fields: [compensedEnergyId], references: [id])
+  compensedEnergyId   Int @unique
+  contributionIlumination String @map("contributionIlumination")
+  createdAt           DateTime        @default(now()) @db.Timestamptz()
+  updatedAt           DateTime        @updatedAt @db.Timestamptz()
 }
 
 model Dashboard {

@@ -24,10 +24,13 @@ router.post(
     try {
       const files = req.files as Express.Multer.File[];
       console.log('files', files);
+
       const parsedDataPromises = files.map(async (file) => await parsePDF(file.buffer, file.originalname));
       console.log('parsedDataPromises', parsedDataPromises);
+
       const parsedDataArray = await Promise.all(parsedDataPromises);
       console.log('parsedDataArray', parsedDataArray);
+      
       const savedInvoicesPromises = parsedDataArray.map(async data => {
         const invoiceData = {
           clientNumber: data.text.cliente,
