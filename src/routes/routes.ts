@@ -40,7 +40,7 @@ router.post(
           compensedEnergy: data.text.energiaCompensada,
           contrivutionIlumination: data.text.contribIlumPublica,
         };
-        await prisma.invoices.create({ data: invoiceData });
+        await prisma.invoice.create({ data: invoiceData });
       });
       
       console.log('savedInvoicesPromises', savedInvoicesPromises);
@@ -56,7 +56,7 @@ router.post(
 
 router.get('/invoices', async (req: Request, res: Response) => {
   try {
-    const invoices = await prisma.invoices.findMany();
+    const invoices = await prisma.invoice.findMany();
     res.status(200).json(invoices);
   } catch (error) {
     console.error('Error retrieving invoices:', error);
@@ -67,7 +67,7 @@ router.get('/invoices', async (req: Request, res: Response) => {
 router.get('/invoices/:id', async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const invoice = await prisma.invoices.findUnique({ where: { id } });
+    const invoice = await prisma.invoice.findUnique({ where: { id } });
     res.status(200).json(invoice);
   } catch (error) {
     console.error('Error retrieving invoice:', error);

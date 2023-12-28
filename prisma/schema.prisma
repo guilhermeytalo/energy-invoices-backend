@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,36 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model InvoiceEntry {
-  id          Int      @id @default(autoincrement())
-  quant       String
-  unitPrice   String
-  value       String
-  unitTax     String
-}
-
-model Invoice {
-  id                  Int             @id @default(autoincrement())
-  clientNumber        String
-  invoiceMonthDate    String
-  eletricEnergy       InvoiceEntry   @relation(name: "EletricEnergy", fields: [eletricEnergyId], references: [id])
-  eletricEnergyId     Int @unique
-  sceeEnergy          InvoiceEntry      @relation(name: "SceeEnergy", fields: [sceeEnergyId], references: [id])
-  sceeEnergyId        Int @unique
-  compensedEnergy     InvoiceEntry @relation(name: "CompensedEnergy",fields: [compensedEnergyId], references: [id])
-  compensedEnergyId   Int @unique
-  contributionIlumination String @map("contributionIlumination")
-  createdAt           DateTime        @default(now()) @db.Timestamptz()
-  updatedAt           DateTime        @updatedAt @db.Timestamptz()
-}
-
 model Dashboard {
-  id          Int      @id @default(autoincrement())
-  consume String
-  compensedEnergy      String
-  totalValueWGd      String
-  sceeEnergyWIcms      String
-  economyGd      String
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
+  id              Int      @id @default(autoincrement())
+  consume         String
+  compensedEnergy String
+  totalValueWGd   String
+  sceeEnergyWIcms String
+  economyGd       String
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime @db.Timestamptz(6)
+}
+
+model invoice {
+  id                      Int          @id @default(autoincrement())
+  clientnumber            String      @db.VarChar(255)
+  invoicemonthdate        String      @db.VarChar(255)
+  eletricenergyid         Int
+  contributionilumination String      @db.VarChar(255)
+  createdat               DateTime     @default(now()) @db.Timestamp(6)
+  updatedat               DateTime     @default(now()) @db.Timestamp(6)
+  invoiceentry            invoiceentry @relation(fields: [eletricenergyid], references: [id])
+}
+
+model invoiceentry {
+  id        Int       @id @default(autoincrement())
+  quant     String   @db.VarChar(255)
+  unitprice String   @db.VarChar(255)
+  value     String   @db.VarChar(255)
+  unittax   String   @db.VarChar(255)
+  invoice   invoice[]
 }
