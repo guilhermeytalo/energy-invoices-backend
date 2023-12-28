@@ -1,11 +1,4 @@
-import fs from 'fs';
-import multer from 'multer';
 import pdfParser from 'pdf-parse';
-import express, { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const router = express.Router();
-
 
 interface ExtractedData {
   fileName: string;
@@ -20,10 +13,13 @@ interface ExtractedData {
   };
 }
 
-export const parsePDF = async (fileBuffer: Buffer, fileName: string): Promise<ExtractedData> => {
+export const parsePDF = async (
+  fileBuffer: Buffer,
+  fileName: string
+): Promise<ExtractedData> => {
   try {
-    const pdfFile = fs.readFileSync(fileBuffer);
-    const data = await pdfParser(pdfFile);
+    const data = await pdfParser(fileBuffer);
+    console.log('data', data);
     const text = data.text;
 
     const regexPatterns: Record<string, RegExp> = {
@@ -70,5 +66,3 @@ export const parsePDF = async (fileBuffer: Buffer, fileName: string): Promise<Ex
     };
   }
 };
-
-

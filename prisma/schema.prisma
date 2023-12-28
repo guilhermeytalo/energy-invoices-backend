@@ -12,9 +12,9 @@ datasource db {
 
 model Invoices {
   id          Int      @id @default(autoincrement())
-  clientNumber   String   @unique
-  invoiceMonthDate DateTime
-  eletricEnergy     DateTime
+  clientNumber   String
+  invoiceMonthDate String
+  eletricEnergy     String
   sceeEnergy      String
   compensedEnergy      String
   contrivutionIlumination      String

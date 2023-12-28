@@ -6,12 +6,13 @@ export const getDashboardData = async (
   res: Response
 ): Promise<void> => {
   try {
-    const directoryPath = './src/assets/invoices';
-    const files = fs.readdirSync(directoryPath);
+    // const directoryPath = './src/assets/invoices';
+    // const files = fs.readdirSync(directoryPath);
 
     // const parsedDataPromises = files.map(async (file) => {
+    //   const fileBuffer = fs.readFileSync(`${directoryPath}/${file}`);
     //   const filePath = `${directoryPath}/${file}`;
-    //   return await parsePDF(filePath);
+    //   return await parsePDF(fileBuffer, filePath);
     // });
 
     // const parsedData = await Promise.all(parsedDataPromises);

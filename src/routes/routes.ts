@@ -15,9 +15,7 @@ const upload = multer({
   },
 });
 
-// router.get('/invoices', getInvoices);
 router.get('/dashboard', getDashboardData);
-// router.post('/upload', );
 
 router.post(
   '/upload',
@@ -26,11 +24,11 @@ router.post(
     try {
       const files = req.files as Express.Multer.File[];
       console.log('files', files);
-      const parsedDataPromises = files.map((file) => parsePDF(file.buffer, file.originalname));
+      const parsedDataPromises = files.map(async (file) => await parsePDF(file.buffer, file.originalname));
       console.log('parsedDataPromises', parsedDataPromises);
       const parsedDataArray = await Promise.all(parsedDataPromises);
       console.log('parsedDataArray', parsedDataArray);
-      const savedInvoicesPromises = parsedDataArray.map(data => {
+      const savedInvoicesPromises = parsedDataArray.map(async data => {
         const invoiceData = {
           clientNumber: data.text.cliente,
           invoiceMonthDate: data.text.referente,
@@ -39,20 +37,9 @@ router.post(
           compensedEnergy: data.text.energiaCompensada,
           contrivutionIlumination: data.text.contribIlumPublica,
         };
-        prisma.invoices.create({ data: invoiceData });
+        await prisma.invoices.create({ data: invoiceData });
       });
       
-    //   const savedInvoicesPromises = parsedDataArray.map((data) => {
-    //     const invoiceData = {
-    //       clientNumber: data.text.cliente,
-    //       invoiceMonthDate: data.text.referente,
-    //       eletricEnergy: data.text.energiaEletrica,
-    //       sceeEnergy: data.text.sceeICMS,
-    //       compensedEnergy: data.text.energiaCompensada,
-    //       contrivutionIlumination: data.text.contribIlumPublica,
-    //     };
-    //     prisma.invoices.create({ data: invoiceData});
-    //   });
       console.log('savedInvoicesPromises', savedInvoicesPromises);
       const savedInvoices = await Promise.all(savedInvoicesPromises);
 
