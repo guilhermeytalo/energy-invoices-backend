@@ -1,22 +1,28 @@
 import fs from 'fs';
+import multer from 'multer';
 import pdfParser from 'pdf-parse';
+import express, { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
+
+const router = express.Router();
+
 
 interface ExtractedData {
   fileName: string;
   numPages: number;
   text: {
-    cliente: string | null;
-    referente: string | null;
-    energiaEletrica: string | null;
-    sceeICMS: string | null;
-    energiaCompensada: string | null;
-    contribIlumPublica: string | null;
+    cliente: string;
+    referente: string;
+    energiaEletrica: string;
+    sceeICMS: string;
+    energiaCompensada: string;
+    contribIlumPublica: string;
   };
 }
 
-export const parsePDF = async (filePath: string): Promise<ExtractedData> => {
+export const parsePDF = async (fileBuffer: Buffer, fileName: string): Promise<ExtractedData> => {
   try {
-    const pdfFile = fs.readFileSync(filePath);
+    const pdfFile = fs.readFileSync(fileBuffer);
     const data = await pdfParser(pdfFile);
     const text = data.text;
 
@@ -35,32 +41,34 @@ export const parsePDF = async (filePath: string): Promise<ExtractedData> => {
     };
 
     const extractedData: ExtractedData = {
-      fileName: filePath,
+      fileName: fileName,
       numPages: data.numpages,
       text: {
-        cliente: extractValue(regexPatterns.cliente),
-        referente: extractValue(regexPatterns.referente),
-        energiaEletrica: extractValue(regexPatterns.energiaEletrica),
-        sceeICMS: extractValue(regexPatterns.sceeICMS),
-        energiaCompensada: extractValue(regexPatterns.energiaCompensada),
-        contribIlumPublica: extractValue(regexPatterns.contribIlumPublica),
+        cliente: extractValue(regexPatterns.cliente)!,
+        referente: extractValue(regexPatterns.referente)!,
+        energiaEletrica: extractValue(regexPatterns.energiaEletrica)!,
+        sceeICMS: extractValue(regexPatterns.sceeICMS)!,
+        energiaCompensada: extractValue(regexPatterns.energiaCompensada)!,
+        contribIlumPublica: extractValue(regexPatterns.contribIlumPublica)!,
       },
     };
 
     return extractedData;
   } catch (error) {
-    console.error(`Error parsing ${filePath}:`, error);
+    console.error(`Error parsing ${fileName}:`, error);
     return {
-      fileName: filePath,
+      fileName: fileName,
       numPages: 0,
       text: {
-        cliente: null,
-        referente: null,
-        energiaEletrica: null,
-        sceeICMS: null,
-        energiaCompensada: null,
-        contribIlumPublica: null,
+        cliente: '',
+        referente: '',
+        energiaEletrica: '',
+        sceeICMS: '',
+        energiaCompensada: '',
+        contribIlumPublica: '',
       },
     };
   }
 };
+
+
