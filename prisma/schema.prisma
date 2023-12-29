@@ -19,21 +19,27 @@ model Dashboard {
 }
 
 model invoice {
-  id                      Int          @id @default(autoincrement())
-  clientnumber            String      @db.VarChar(255)
-  invoicemonthdate        String      @db.VarChar(255)
-  eletricenergyid         Int
-  contributionilumination String      @db.VarChar(255)
-  createdat               DateTime     @default(now()) @db.Timestamp(6)
-  updatedat               DateTime     @default(now()) @db.Timestamp(6)
-  invoiceentry            invoiceentry @relation(fields: [eletricenergyid], references: [id])
+  id                              Int          @id @default(autoincrement())
+  clientnumber                    String       @db.VarChar(255)
+  invoicemonthdate                String       @db.VarChar(255)
+  contributionilumination         String       @db.VarChar(255)
+  eletricenergyid                 Int
+  energysceeid                    Int
+  compensedenergyid               Int
+  createdat                       DateTime     @default(now()) @db.Timestamp(6)
+  updatedat                       DateTime     @default(now()) @db.Timestamp(6)
+  eletricenergyidToinvoiceentry   invoiceentry @relation("eletricenergyidToinvoiceentry", fields: [eletricenergyid], references: [id])
+  energysceeidToinvoiceentry      invoiceentry @relation("energysceeidToinvoiceentry", fields: [energysceeid], references: [id])
+  compensedenergyidToinvoiceentry invoiceentry @relation("compensedenergyidToinvoiceentry", fields: [compensedenergyid], references: [id])
 }
 
 model invoiceentry {
-  id        Int       @id @default(autoincrement())
-  quant     String   @db.VarChar(255)
-  unitprice String   @db.VarChar(255)
-  value     String   @db.VarChar(255)
-  unittax   String   @db.VarChar(255)
-  invoice   invoice[]
+  id                              Int       @id @default(autoincrement())
+  quant                           String    @db.VarChar(255)
+  unitprice                       String    @db.VarChar(255)
+  value                           String    @db.VarChar(255)
+  unittax                         String    @db.VarChar(255)
+  eletricenergyidToinvoiceentry   invoice[] @relation("eletricenergyidToinvoiceentry")
+  energysceeidToinvoiceentry      invoice[] @relation("energysceeidToinvoiceentry")
+  compensedenergyidToinvoiceentry invoice[] @relation("compensedenergyidToinvoiceentry")
 }
