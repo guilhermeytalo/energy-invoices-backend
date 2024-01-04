@@ -20,7 +20,7 @@ export const getInvoices = async (
 export const getInvoiceById = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const invoice = await prisma.invoice.findUnique({ 
+    const invoice = await prisma.invoice.findUnique({
       where: { id },
       include: {
         eletricenergyidToinvoiceentry: true,
@@ -33,7 +33,7 @@ export const getInvoiceById = async (req: Request, res: Response) => {
     console.error('Error retrieving invoice:', error);
     res.status(400).json({ error: 'Failed to retrieve invoice' });
   }
-}
+};
 
 export const uploadInvoice = async (
   req: Request,

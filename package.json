@@ -10,7 +10,8 @@
     "start:dev": "npx nodemon",
     "migrate": "prisma migrate dev",
     "build": "rimraf ./build && tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "swagger-autogen": "node ./docs/swagger.js"
   },
   "dependencies": {
     "@prisma/client": "5.7.1",
@@ -27,6 +28,8 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "rimraf": "^5.0.5",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
