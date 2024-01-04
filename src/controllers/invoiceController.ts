@@ -1,32 +1,5 @@
 import pdfParser from 'pdf-parse';
-
-interface ExtractedData {
-  fileName: string;
-  numPages: number;
-  text: {
-    cliente: string;
-    referente: string;
-    energiaEletrica: {
-      quant: string;
-      unitPrice: string;
-      value: string;
-      unitTax: string;
-    };
-    sceeICMS: {
-      quant: string;
-      unitPrice: string;
-      value: string;
-      unitTax: string;
-    };
-    energiaCompensada: {
-      quant: string;
-      unitPrice: string;
-      value: string;
-      unitTax: string;
-    };
-    contribIlumPublica: string;
-  };
-}
+import { ExtractedData } from '../utils/interfaces';
 
 export const parsePDF = async (
   fileBuffer: Buffer,
