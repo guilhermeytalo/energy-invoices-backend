@@ -23,15 +23,12 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const files = req.files as Express.Multer.File[];
-      console.log('files', files);
 
       const parsedDataPromises = files.map(
         async (file) => await parsePDF(file.buffer, file.originalname)
       );
-      console.log('parsedDataPromises', parsedDataPromises);
 
       const parsedDataArray = await Promise.all(parsedDataPromises);
-      console.log('parsedDataArray', parsedDataArray);
 
       const savedInvoicesPromises = parsedDataArray.map(async (data) => {
         const eletricEnergy = await prisma.invoiceentry.create({
@@ -73,7 +70,6 @@ router.post(
         return 'Invoice created successfully'
       });
 
-      console.log('savedInvoicesPromises', savedInvoicesPromises);
       const savedInvoices = await Promise.all(savedInvoicesPromises);
 
       res.status(200).json(savedInvoices);
