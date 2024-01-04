@@ -17,6 +17,24 @@ export const getInvoices = async (
   }
 };
 
+export const getInvoiceById = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const invoice = await prisma.invoice.findUnique({ 
+      where: { id },
+      include: {
+        eletricenergyidToinvoiceentry: true,
+        energysceeidToinvoiceentry: true,
+        compensedenergyidToinvoiceentry: true,
+      },
+    });
+    res.status(200).json(invoice);
+  } catch (error) {
+    console.error('Error retrieving invoice:', error);
+    res.status(400).json({ error: 'Failed to retrieve invoice' });
+  }
+}
+
 export const uploadInvoice = async (
   req: Request,
   res: Response
