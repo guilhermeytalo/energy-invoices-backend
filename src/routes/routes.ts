@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024, // no larger than 5mb
+    fileSize: 5 * 1024 * 1024,
   },
 });
 
@@ -25,24 +25,54 @@ router.post(
       const files = req.files as Express.Multer.File[];
       console.log('files', files);
 
-      const parsedDataPromises = files.map(async (file) => await parsePDF(file.buffer, file.originalname));
+      const parsedDataPromises = files.map(
+        async (file) => await parsePDF(file.buffer, file.originalname)
+      );
       console.log('parsedDataPromises', parsedDataPromises);
 
       const parsedDataArray = await Promise.all(parsedDataPromises);
       console.log('parsedDataArray', parsedDataArray);
-      
-      const savedInvoicesPromises = parsedDataArray.map(async data => {
+
+      const savedInvoicesPromises = parsedDataArray.map(async (data) => {
+        const eletricEnergy = await prisma.invoiceentry.create({
+          data: {
+            quant: data.text.energiaEletrica.quant,
+            unitprice: data.text.energiaEletrica.unitPrice,
+            value: data.text.energiaEletrica.value,
+            unittax: data.text.energiaEletrica.unitTax,
+          },
+        });
+        const sceeEnergy = await prisma.invoiceentry.create({
+          data: {
+            quant: data.text.sceeICMS.quant,
+            unitprice: data.text.sceeICMS.unitPrice,
+            value: data.text.sceeICMS.value,
+            unittax: data.text.sceeICMS.unitTax,
+          },
+        });
+        const compensedEnergy = await prisma.invoiceentry.create({
+          data: {
+            quant: data.text.energiaCompensada.quant,
+            unitprice: data.text.energiaCompensada.unitPrice,
+            value: data.text.energiaCompensada.value,
+            unittax: data.text.energiaCompensada.unitTax,
+          },
+        });
+
         const invoiceData = {
-          clientNumber: data.text.cliente,
-          invoiceMonthDate: data.text.referente,
-          eletricEnergy: data.text.energiaEletrica,
-          sceeEnergy: data.text.sceeICMS,
-          compensedEnergy: data.text.energiaCompensada,
-          contrivutionIlumination: data.text.contribIlumPublica,
+          clientnumber: data.text.cliente,
+          invoicemonthdate: data.text.referente,
+          eletricenergyid: eletricEnergy.id,
+          energysceeid: sceeEnergy.id,
+          compensedenergyid: compensedEnergy.id,
+          contributionilumination: data.text.contribIlumPublica,
         };
+
         await prisma.invoice.create({ data: invoiceData });
+
+        return 'Invoice created successfully'
       });
-      
+
       console.log('savedInvoicesPromises', savedInvoicesPromises);
       const savedInvoices = await Promise.all(savedInvoicesPromises);
 

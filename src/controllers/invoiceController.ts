@@ -6,9 +6,24 @@ interface ExtractedData {
   text: {
     cliente: string;
     referente: string;
-    energiaEletrica: string;
-    sceeICMS: string;
-    energiaCompensada: string;
+    energiaEletrica: {
+      quant: string;
+      unitPrice: string;
+      value: string;
+      unitTax: string;
+    };
+    sceeICMS: {
+      quant: string;
+      unitPrice: string;
+      value: string;
+      unitTax: string;
+    };
+    energiaCompensada: {
+      quant: string;
+      unitPrice: string;
+      value: string;
+      unitTax: string;
+    };
     contribIlumPublica: string;
   };
 }
@@ -31,21 +46,36 @@ export const parsePDF = async (
       contribIlumPublica: /Contrib Ilum Publica Municipal(.*?)\n/,
     };
 
-    const extractValue = (pattern: RegExp): string | null => {
+    const extractValue = (pattern: RegExp): string[] | null => {
       const match = text.match(pattern);
-      return match ? match[1].trim() : null;
+      return match ? match[1].trim().split(/\s+/) : null;
     };
 
     const extractedData: ExtractedData = {
       fileName: fileName,
       numPages: data.numpages,
       text: {
-        cliente: extractValue(regexPatterns.cliente)!,
-        referente: extractValue(regexPatterns.referente)!,
-        energiaEletrica: extractValue(regexPatterns.energiaEletrica)!,
-        sceeICMS: extractValue(regexPatterns.sceeICMS)!,
-        energiaCompensada: extractValue(regexPatterns.energiaCompensada)!,
-        contribIlumPublica: extractValue(regexPatterns.contribIlumPublica)!,
+        cliente: extractValue(regexPatterns.cliente)![0],
+        referente: extractValue(regexPatterns.referente)![0],
+        energiaEletrica: {
+          quant: extractValue(regexPatterns.energiaEletrica)![0],
+          unitPrice: extractValue(regexPatterns.energiaEletrica)![1],
+          value: extractValue(regexPatterns.energiaEletrica)![2],
+          unitTax: extractValue(regexPatterns.energiaEletrica)![3],
+        },
+        sceeICMS: {
+          quant: extractValue(regexPatterns.sceeICMS)![0],
+          unitPrice: extractValue(regexPatterns.sceeICMS)![1],
+          value: extractValue(regexPatterns.sceeICMS)![2],
+          unitTax: extractValue(regexPatterns.sceeICMS)![3],
+        },
+        energiaCompensada: {
+          quant: extractValue(regexPatterns.energiaCompensada)![0],
+          unitPrice: extractValue(regexPatterns.energiaCompensada)![1],
+          value: extractValue(regexPatterns.energiaCompensada)![2],
+          unitTax: extractValue(regexPatterns.energiaCompensada)![3],
+        },
+        contribIlumPublica: extractValue(regexPatterns.contribIlumPublica)![0],
       },
     };
 
@@ -58,9 +88,24 @@ export const parsePDF = async (
       text: {
         cliente: '',
         referente: '',
-        energiaEletrica: '',
-        sceeICMS: '',
-        energiaCompensada: '',
+        energiaEletrica: {
+          quant: '',
+          unitPrice: '',
+          value: '',
+          unitTax: '',
+        },
+        sceeICMS: {
+          quant: '',
+          unitPrice: '',
+          value: '',
+          unitTax: '',
+        },
+        energiaCompensada: {
+          quant: '',
+          unitPrice: '',
+          value: '',
+          unitTax: '',
+        },
         contribIlumPublica: '',
       },
     };
