@@ -30,3 +30,18 @@ Iniciando Localmente
 ```
 npm run start:dev
 ```
+##  Endpoints
+/upload - POST - http://localhost:3000/api/invoices/upload
+/invoices - GET - http://localhost:3000/api/invoices
+
+## TODOS
+
+- [x] Criar o banco de dados
+- [x] Criar o modelo de dados
+- [x] Criar o endpoint de upload
+- [ ] Criar o endpoint de listagem
+- [ ] Criar o endpoint de download
+- [ ] Criar o endpoint de exclusão
+- [ ] Criar o endpoint de dashboard
+- [ ] Criar em Docker
+- [ ] Criar testes unitários
